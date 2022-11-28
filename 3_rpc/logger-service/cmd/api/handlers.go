@@ -1,11 +1,12 @@
 package main
 
 import (
+	"fmt"
 	"log-service/data"
 	"net/http"
-	"fmt"
 )
 
+// JSONPayload RPC payload (should be similar to the payload of the request)
 type JSONPayload struct {
 	Name string `json:"name"`
 	Data string `json:"data"`
@@ -30,7 +31,7 @@ func (app *Config) WriteLog(w http.ResponseWriter, r *http.Request) {
 	}
 
 	resp := jsonResponse{
-		Error: false,
+		Error:   false,
 		Message: "logged",
 	}
 

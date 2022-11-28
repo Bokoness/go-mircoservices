@@ -229,23 +229,27 @@ func (app *Config) pushToQueue(name, msg string) error {
 	return nil
 }
 
+// RPCPayload the rpc payload to send to logger service
+// payload should be similar by name and data to the server payload
 type RPCPayload struct {
 	Name string
 	Data string
 }
 
 func (app *Config) logItemViaRPC(w http.ResponseWriter, l LogPayload) {
+	// Connecting to logger service via rpc
 	client, err := rpc.Dial("tcp", "logger-service:5001")
 	if err != nil {
 		app.errorJSON(w, err)
 		return
 	}
 
-	rpcPayload := RPCPayload {
+	rpcPayload := RPCPayload{
 		Name: l.Name,
 		Data: l.Data,
 	}
 
+	// Sending data to logger service using RPC
 	var result string
 	err = client.Call("RPCServer.LogInfo", rpcPayload, &result)
 	if err != nil {
@@ -253,8 +257,8 @@ func (app *Config) logItemViaRPC(w http.ResponseWriter, l LogPayload) {
 		return
 	}
 
-	payload := jsonResponse {
-		Error: false,
+	payload := jsonResponse{
+		Error:   false,
 		Message: result,
 	}
 
